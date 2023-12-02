@@ -22,9 +22,19 @@ class UserController {
               tc: tc,
             });
             await doc.save();
+            const saved_user = await userModel.findOne({ email: email });
+
+            // Generate JWT Token
+            const token = jwt.sign(
+              { userId: saved_user._id },
+              process.env.JWT_SECRET_KEY,
+              { expiresIn: "5d" }
+            );
+
             res.status(201).send({
               status: "success",
               message: "Registrasi Berhasil",
+              token: token,
             });
           } catch (error) {
             console.log(error);
@@ -54,9 +64,16 @@ class UserController {
         if (user != null) {
           const isMatch = await bcrypt.compare(password, user.password);
           if (user.email === email && isMatch) {
+            // Generate JWT Token
+            const token = jwt.sign(
+              { userId: user._id },
+              process.env.JWT_SECRET_KEY,
+              { expiresIn: "5d" }
+            );
             res.send({
               status: "success",
               message: "Login Berhasil",
+              token: token,
             });
           } else {
             res.send({
