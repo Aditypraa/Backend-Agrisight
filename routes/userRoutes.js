@@ -7,5 +7,6 @@ router.post("/register", UserController.userRegistrasion);
 router.post("/login", UserController.userLogin);
 
 // Protected Routes
+router.post("/changepassword", UserController.changeUserPassword);
 
 export default router;
