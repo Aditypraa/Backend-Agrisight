@@ -21,6 +21,10 @@ class UserController {
               tc: tc,
             });
             await doc.save();
+            res.status(201).send({
+              status: "success",
+              message: "Registrasi Berhasil",
+            });
           } catch (error) {
             console.log(error);
             res.send({
@@ -40,3 +44,5 @@ class UserController {
     }
   };
 }
+
+export default UserController;
