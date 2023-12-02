@@ -110,7 +110,13 @@ class UserController {
         });
       } else {
         const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(password, salt);
+        const newHashPassword = await bcrypt.hash(password, salt);
+        await userModel.findByIdAndUpdate(req.user._id, {
+          $set: { password: newHashPassword },
+        });
+        res
+          .status(401)
+          .send({ status: "Success", message: "Password change Succesfully" });
       }
     } else {
       res.send({
