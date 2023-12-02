@@ -125,6 +125,11 @@ class UserController {
       });
     }
   };
+
+  // Logged User/User yang Login
+  static loggedUser = async (req, res) => {
+    res.send({ user: req.user });
+  };
 }
 
 export default UserController;
