@@ -1,6 +1,7 @@
 import userModel from "../Models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import transporter from "../config/emailConfig.js";
 
 class UserController {
   // USER REGISTRATION
@@ -143,9 +144,19 @@ class UserController {
         });
         const link = `http://127.0.0.1:3000/api/user/reset/${user._id}/${token}`;
         console.log(link);
+
+        // Send Email
+        let info = await transporter.sendMail({
+          from: process.env.EMAIL_FROM,
+          to: user.email,
+          subject: "AGRISIGHT - Password Reset Link",
+          html: `<a href=${link}>Click Here</a> to Reset Your Password`,
+        });
+
         res.send({
           status: "success",
           message: "Password reset Email sent... Please Check Your Email",
+          info: info,
         });
       } else {
         res.send({
