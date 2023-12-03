@@ -160,6 +160,45 @@ class UserController {
       });
     }
   };
+
+  // User Password Reset
+  static userPasswordReset = async (req, res) => {
+    const { password, password_confirmation } = req.body;
+    const { id, token } = req.params;
+    const user = await userModel.findById(id);
+    const new_secret = user._id + process.env.JWT_SECRET_KEY;
+    try {
+      jwt.verify(token, new_secret);
+      if (password && password_confirmation) {
+        if (password !== password_confirmation) {
+          res.send({
+            status: "failed",
+            message: "New Password and New Password Confirmation Doesn't match",
+          });
+        } else {
+          const salt = await bcrypt.genSalt(10);
+          const newHashPassword = await bcrypt.hash(password, salt);
+          await userModel.findByIdAndUpdate(user._id, {
+            $set: { password: newHashPassword },
+          });
+          res.send({
+            status: "success",
+            message: "Password reset successfully",
+          });
+        }
+      } else {
+        res.send({
+          status: "failed",
+          message: "All Fields are required",
+        });
+      }
+    } catch (error) {
+      res.send({
+        status: "failed",
+        message: "Invalid Token",
+      });
+    }
+  };
 }
 
 export default UserController;
