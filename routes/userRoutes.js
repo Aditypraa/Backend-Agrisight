@@ -10,6 +10,10 @@ router.use("/loggeduser", checkUserAuth);
 // Public Routes
 router.post("/register", UserController.userRegistrasion);
 router.post("/login", UserController.userLogin);
+router.post(
+  "/send-reset-password-email",
+  UserController.sendUserPasswordResetEmail
+);
 
 // Protected Routes
 router.post("/changepassword", UserController.changeUserPassword);

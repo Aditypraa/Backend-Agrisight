@@ -130,6 +130,36 @@ class UserController {
   static loggedUser = async (req, res) => {
     res.send({ user: req.user });
   };
+
+  // Send User Password Reset Email
+  static sendUserPasswordResetEmail = async (req, res) => {
+    const { email } = req.body;
+    if (email) {
+      const user = await userModel.findOne({ email: email });
+      if (user) {
+        const secret = user._id + process.env.JWT_SECRET_KEY;
+        const token = jwt.sign({ userId: user._id }, secret, {
+          expiresIn: "15m",
+        });
+        const link = `http://127.0.0.1:3000/api/user/reset/${user._id}/${token}`;
+        console.log(link);
+        res.send({
+          status: "success",
+          message: "Password reset Email sent... Please Check Your Email",
+        });
+      } else {
+        res.send({
+          status: "failed",
+          message: "Email doesn't not exist",
+        });
+      }
+    } else {
+      res.send({
+        status: "failed",
+        message: "Email Field is required",
+      });
+    }
+  };
 }
 
 export default UserController;
