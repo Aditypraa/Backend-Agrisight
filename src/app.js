@@ -28,6 +28,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/artikel", artikelRoute);
 app.use("/api/tanaman", tanamanRoute);
 
+app.use("/", (req, res) => {
+  return res.status(200).json({
+    message: "Welcome to Agrisight Rest API",
+  });
+});
+
+app.use((req, res) => {
+  return res.status(404).json({
+    message: "404 Endpoint Not Found",
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`💡 listening on http://localhost:${PORT}`);
 });
