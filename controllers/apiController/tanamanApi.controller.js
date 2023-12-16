@@ -11,8 +11,9 @@ class TanamanControllerApi {
 
       // Ganti res.render dengan res.json
       res.json({
+        success: true,
         message: "Tanaman get all successfully",
-        tanamans,
+        data: { tanamans },
       });
     } catch (error) {
       console.log(error);
@@ -26,16 +27,21 @@ class TanamanControllerApi {
       const docSnapshot = await tanamanRef.doc(tanamanId).get();
 
       if (!docSnapshot.exists) {
-        res
-          .status(404)
-          .json({ message: `Artikel with ID ${tanamanId} not found` });
+        res.status(404).json({
+          success: false,
+          message: `Tanaman with ID ${tanamanId} not found`,
+        });
         return;
       }
 
       const tanamanData = docSnapshot.data();
       const tanaman = { id: tanamanId, ...tanamanData };
 
-      res.json({ message: "Product retrieved successfully", tanaman });
+      res.json({
+        success: true,
+        message: `Tanaman ${tanamanId} retrieved successfully`,
+        data: { tanaman },
+      });
     } catch (error) {
       console.log(error);
       res.sendStatus(500);

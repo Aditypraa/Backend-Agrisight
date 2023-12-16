@@ -9,10 +9,10 @@ class ArtikelControllerApi {
         artikels.push({ id: doc.id, ...doc.data() });
       });
 
-      // Ganti res.render dengan res.json
       res.json({
+        success: true,
         message: "Artikel get all successfully",
-        artikels,
+        data: { artikels },
       });
     } catch (error) {
       console.log(error);
@@ -26,16 +26,20 @@ class ArtikelControllerApi {
       const docSnapshot = await artikelRef.doc(artikelId).get();
 
       if (!docSnapshot.exists) {
-        res
-          .status(404)
-          .json({ message: `Artikel with ID ${artikelId} not found` });
+        res.status(404).json({
+          success: false,
+          message: `Artikel with ID ${artikelId} not found`,
+        });
         return;
       }
 
       const artikelData = docSnapshot.data();
       const artikel = { id: artikelId, ...artikelData };
-
-      res.json({ message: "Product retrieved successfully", artikel });
+      res.json({
+        success: true,
+        message: `Artikel ${artikelId} retrieved successfully`,
+        data: { artikel },
+      });
     } catch (error) {
       console.log(error);
       res.sendStatus(500);
