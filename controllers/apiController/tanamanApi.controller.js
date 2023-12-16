@@ -32,10 +32,10 @@ class TanamanControllerApi {
         return;
       }
 
-      const artikelData = docSnapshot.data();
-      const artikel = { id: tanamanId, ...artikelData };
+      const tanamanData = docSnapshot.data();
+      const tanaman = { id: tanamanId, ...tanamanData };
 
-      res.json({ message: "Product retrieved successfully", tanamanId });
+      res.json({ message: "Product retrieved successfully", tanaman });
     } catch (error) {
       console.log(error);
       res.sendStatus(500);
