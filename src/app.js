@@ -1,42 +1,38 @@
-import express from "express";
-import dotenv from "dotenv";
-// import db from "./configs/database.config.js";
-
-// ROUTES
-import artikelRoute from "./routes/Artikel.routes.js";
-import tanamanRoute from "./routes/Tanaman.routes.js";
-
-//EXPRESS
-const app = express();
+const path = require("path");
+const express = require("express");
+const dotenv = require("dotenv");
 
 // DOTENV
 dotenv.config();
 const PORT = process.env.PORT;
 
-app.use(express.json());
+const app = express();
 app.use(express.urlencoded({ extended: true }));
 
-// db.sync({ force: false })
-//   .then(() => {
-//     console.info("database synced");
-//   })
-//   .catch((err) => {
-//     console.error("failed to sync database: " + err.message);
-//   });
+// Router
+const indexRouter = require("./routes/Index.routes");
+const tanamanRouter = require("./routes/Tanaman.routes");
+const artikelRouter = require("./routes/Artikel.routes");
 
-// USE ROUTER
-app.use("/api/artikel", artikelRoute);
-app.use("/api/tanaman", tanamanRoute);
+// Router API
+const artikelApiRouter = require("./routes/apiRoutes/artikelApi.routes");
+const tanamanApiRouter = require("./routes/apiRoutes/tanamanApi.routes");
 
-app.use("/", (req, res) => {
+// Template Engine EJS
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+// URL Route
+app.use("/index", indexRouter);
+app.use("/tanaman", tanamanRouter);
+app.use("/artikel", artikelRouter);
+
+// Endpoint API
+app.use("/api/artikel", artikelApiRouter);
+app.use("/api/tanaman", tanamanApiRouter);
+app.use("/api", (req, res) => {
   return res.status(200).json({
     message: "Welcome to Agrisight Rest API",
-  });
-});
-
-app.use((req, res) => {
-  return res.status(404).json({
-    message: "404 Endpoint Not Found",
   });
 });
 

@@ -1,12 +1,12 @@
-import express from "express";
-import TanamanController from "../controllers/Tanaman.controller.js";
-
+const express = require("express");
+const TanamanController = require("../controllers/Tanaman.controller");
 const router = express.Router();
 
-router.get("/", TanamanController.all);
-router.post("/", TanamanController.create);
-router.get("/:id", TanamanController.find);
-router.put("/:id", TanamanController.update);
-router.delete("/:id", TanamanController.destroy);
+router.get("/", TanamanController.getTanaman);
+router.get("/add", TanamanController.addTanamanPage);
+router.post("/", TanamanController.addTanaman);
+router.get("/edit/:id", TanamanController.editTanaman);
+router.post("/update/:id", TanamanController.updateTanaman);
+router.post("/delete/:id", TanamanController.deleteTanaman);
 
-export default router;
+module.exports = router;

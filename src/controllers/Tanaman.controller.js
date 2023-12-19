@@ -1,178 +1,91 @@
-import Tanaman from "../models/Tanaman.model.js";
+const { tanamanRef } = require("../configs/firebase");
 
 class TanamanController {
-  static create = async (req, res) => {
+  static getTanaman = async (req, res) => {
     try {
-      const { nama_tanaman, nama_latin, gambar } = req.body;
+      const snapshot = await tanamanRef.get();
+      const tanamans = [];
+      snapshot.forEach((doc) => {
+        tanamans.push({ id: doc.id, ...doc.data() });
+      });
+      res.render("./pages/tanaman/tanaman", { tanamans });
+    } catch (error) {
+      console.log(error);
+      res.sendStatus(500);
+    }
+  };
+  static addTanamanPage = (req, res) => {
+    res.render("./pages/tanaman/addTanamanPage");
+  };
 
-      const tanaman = await Tanaman.create({
-        nama_tanaman,
+  static addTanaman = async (req, res) => {
+    try {
+      const { nama, nama_latin, gambar, deskripsi } = req.body;
+      const newTanamanRef = tanamanRef.doc();
+      const newTanaman = {
+        nama,
         nama_latin,
         gambar,
-      });
-
-      return res.status(201).json({
-        status: 201,
-        success: true,
-        message: "Berhasil Membuat Tanaman!",
-        data: {
-          tanaman,
-        },
-        error: null,
-      });
+        deskripsi,
+        id: newTanamanRef.id,
+      };
+      await newTanamanRef.set(newTanaman);
+      res.redirect("/tanaman");
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
+      console.log(error);
+      res.sendStatus(500);
     }
   };
 
-  static all = async (req, res) => {
+  static editTanaman = async (req, res) => {
     try {
-      const tanamans = await Tanaman.findAll();
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: "ok",
-        data: {
-          tanamans,
-        },
-        error: null,
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
-    }
-  };
-
-  static find = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const tanaman = await Tanaman.findOne({
-        where: {
-          id: id,
-        },
-      });
-
-      if (!tanaman) {
-        return res.status(404).json({
-          status: 404,
-          success: false,
-          message: "tanaman not found",
-          data: null,
-          error: "Tanaman Not Found",
-        });
+      const tanamanId = req.params.id;
+      const editTanamanRef = tanamanRef.doc(tanamanId);
+      const tanamanDoc = await editTanamanRef.get();
+      if (!tanamanDoc.exists) {
+        res.sendStatus(404);
+        return;
       }
-
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: "ok",
-        data: {
-          tanaman,
-        },
-        error: null,
+      const tanamanData = tanamanDoc.data();
+      res.render("./pages/tanaman/editTanamanPage", {
+        tanaman: tanamanData,
       });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
+      console.log(error);
+      res.sendStatus(500);
     }
   };
 
-  static update = async (req, res) => {
+  static updateTanaman = async (req, res) => {
     try {
-      const { id } = req.params;
-
-      const updated = await Tanaman.update(req.body, {
-        where: {
-          id: id,
-        },
-      });
-
-      if (!updated[0]) {
-        return res.status(200).json({
-          status: 200,
-          success: false,
-          message: "failed to update tanaman",
-          data: null,
-          error: "Failed To Update Tanaman",
-        });
-      }
-
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: "Tanaman Berhasil DiUpdate!",
-        data: null,
-        error: null,
-      });
+      const tanamanId = req.params.id;
+      const updateTanamanRef = tanamanRef.doc(tanamanId);
+      const { nama, nama_latin, gambar, deskripsi } = req.body;
+      const updatedTanaman = {
+        nama,
+        nama_latin,
+        gambar,
+        deskripsi,
+      };
+      await updateTanamanRef.update(updatedTanaman);
+      res.redirect("/tanaman");
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
+      console.log(error);
+      res.sendStatus(500);
     }
   };
 
-  static destroy = async (req, res) => {
+  static deleteTanaman = async (req, res) => {
     try {
-      const { id } = req.params;
-
-      const destroyed = await Tanaman.destroy({
-        where: {
-          id: id,
-        },
-      });
-
-      if (!destroyed) {
-        return res.status(200).json({
-          status: 200,
-          success: false,
-          message: "failed to delete tanaman",
-          data: null,
-          error: "Failed To Delete Tanaman",
-        });
-      }
-
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: "Sukses Menghapus Tanaman!",
-        data: null,
-        error: null,
-      });
+      const tanamanId = req.params.id;
+      const deleteTanamanRef = tanamanRef.doc(tanamanId);
+      await deleteTanamanRef.delete();
+      res.redirect("/tanaman");
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
+      console.log(error);
+      res.sendStatus(500);
     }
   };
 }
 
-export default TanamanController;
+module.exports = TanamanController;

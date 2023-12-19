@@ -1,180 +1,94 @@
-import Artikel from "../models/Artikel.model.js";
+const { artikelRef } = require("../configs/firebase");
 
 class ArtikelController {
-  static create = async (req, res) => {
+  static getArtikel = async (req, res) => {
+    try {
+      const snapshot = await artikelRef.get();
+      const artikels = [];
+      snapshot.forEach((doc) => {
+        artikels.push({ id: doc.id, ...doc.data() });
+      });
+      res.render("./pages/artikel/artikel", { artikels });
+    } catch (error) {
+      console.log(error);
+      res.sendStatus(500);
+    }
+  };
+
+  static addArtikelPage = (req, res) => {
+    res.render("./pages/artikel/addArtikelPage");
+  };
+
+  static addArtikel = async (req, res) => {
     try {
       const { judul, deskripsi, tanggal, kategori, gambar } = req.body;
-
-      const artikel = await Artikel.create({
+      const newArtikelRef = artikelRef.doc();
+      const newArtikel = {
         judul,
         deskripsi,
         tanggal,
         kategori,
         gambar,
-      });
-
-      return res.status(201).json({
-        status: 201,
-        success: true,
-        message: "Berhasil Membuat Artikel!",
-        data: {
-          artikel,
-        },
-        error: null,
-      });
+        id: newArtikelRef.id,
+      };
+      await newArtikelRef.set(newArtikel);
+      res.redirect("/artikel");
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
+      console.log(error);
+      res.sendStatus(500);
     }
   };
 
-  static all = async (req, res) => {
+  static editArtikel = async (req, res) => {
     try {
-      const artikels = await Artikel.findAll();
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: "ok",
-        data: {
-          artikels,
-        },
-        error: null,
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
-    }
-  };
-
-  static find = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const artikel = await Artikel.findOne({
-        where: {
-          id: id,
-        },
-      });
-
-      if (!artikel) {
-        return res.status(404).json({
-          status: 404,
-          success: false,
-          message: "artikel not found",
-          data: null,
-          error: "Artikel Not Found",
-        });
+      const artikelId = req.params.id;
+      const editArtikelRef = artikelRef.doc(artikelId);
+      const artikelDoc = await editArtikelRef.get();
+      if (!artikelDoc.exists) {
+        res.sendStatus(404);
+        return;
       }
-
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: "ok",
-        data: {
-          artikel,
-        },
-        error: null,
+      const artikelData = artikelDoc.data();
+      res.render("./pages/artikel/editArtikelPage", {
+        artikel: artikelData,
       });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
+      console.log(error);
+      res.sendStatus(500);
     }
   };
 
-  static update = async (req, res) => {
+  static updateArtikel = async (req, res) => {
     try {
-      const { id } = req.params;
-
-      const updated = await Artikel.update(req.body, {
-        where: {
-          id: id,
-        },
-      });
-
-      if (!updated[0]) {
-        return res.status(200).json({
-          status: 200,
-          success: false,
-          message: "failed to update artikel",
-          data: null,
-          error: "Failed To Update Artikel",
-        });
-      }
-
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: "Artikel Berhasil DiUpdate!",
-        data: null,
-        error: null,
-      });
+      const artikelId = req.params.id;
+      const updateArtikelRef = artikelRef.doc(artikelId);
+      const { judul, deskripsi, tanggal, kategori, gambar } = req.body;
+      const updatedArtikel = {
+        judul,
+        deskripsi,
+        tanggal,
+        kategori,
+        gambar,
+      };
+      await updateArtikelRef.update(updatedArtikel);
+      res.redirect("/artikel");
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
+      console.log(error);
+      res.sendStatus(500);
     }
   };
 
-  static destroy = async (req, res) => {
+  static deleteArtikel = async (req, res) => {
     try {
-      const { id } = req.params;
-
-      const destroyed = await Artikel.destroy({
-        where: {
-          id: id,
-        },
-      });
-
-      if (!destroyed) {
-        return res.status(200).json({
-          status: 200,
-          success: false,
-          message: "failed to delete artikel",
-          data: null,
-          error: "Failed To Delete Artikel",
-        });
-      }
-
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: "Sukses Menghapus Artikel!",
-        data: null,
-        error: null,
-      });
+      const artikelId = req.params.id;
+      const deleteArtikelRef = artikelRef.doc(artikelId);
+      await deleteArtikelRef.delete();
+      res.redirect("/artikel");
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({
-        status: 500,
-        success: false,
-        message: "internal server error",
-        data: null,
-        error: "Internal Server Error",
-      });
+      console.log(error);
+      res.sendStatus(500);
     }
   };
 }
 
-export default ArtikelController;
+module.exports = ArtikelController;

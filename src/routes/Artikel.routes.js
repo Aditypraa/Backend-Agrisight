@@ -1,12 +1,12 @@
-import express from "express";
-import ArtikelController from "../controllers/Artikel.controller.js";
-
+const express = require("express");
+const ArtikelController = require("../controllers/Artikel.controller");
 const router = express.Router();
 
-router.get("/", ArtikelController.all);
-router.post("/", ArtikelController.create);
-router.get("/:id", ArtikelController.find);
-router.put("/:id", ArtikelController.update);
-router.delete("/:id", ArtikelController.destroy);
+router.get("/", ArtikelController.getArtikel);
+router.get("/add", ArtikelController.addArtikelPage);
+router.post("/", ArtikelController.addArtikel);
+router.get("/edit/:id", ArtikelController.editArtikel);
+router.post("/update/:id", ArtikelController.updateArtikel);
+router.post("/delete/:id", ArtikelController.deleteArtikel);
 
-export default router;
+module.exports = router;
