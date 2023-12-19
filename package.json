@@ -10,6 +10,7 @@
   "author": "Team CH2-PS485",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/firestore": "^7.1.0",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "firebase": "^8.10.1",

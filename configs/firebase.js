@@ -1,16 +1,16 @@
 const firebase = require("firebase");
-const admin = require("firebase-admin");
 
+const admin = require("firebase-admin");
 const serviceAccount = require("./service-account.json");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCT2tM9bIgHUN3jgDB1ZeePvK4uvsbqdyE",
-  authDomain: "agrisight-db.firebaseapp.com",
-  projectId: "agrisight-db",
-  storageBucket: "agrisight-db.appspot.com",
-  messagingSenderId: "452340927341",
-  appId: "1:452340927341:web:ba50f8d7892e02fcc2e864",
-  measurementId: "G-4Q3NEVJZYL",
+  apiKey: "AIzaSyAKOjy3XpN6sEAMaHyjCy_zE0gEn7STKvw",
+  authDomain: "agrisight-dev.firebaseapp.com",
+  projectId: "agrisight-dev",
+  storageBucket: "agrisight-dev.appspot.com",
+  messagingSenderId: "901563183991",
+  appId: "1:901563183991:web:da646462fc5e8a83442772",
+  measurementId: "G-MDYZZDGGGR",
 };
 
 admin.initializeApp({
