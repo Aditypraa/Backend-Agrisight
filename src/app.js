@@ -19,6 +19,7 @@ const artikelApiRouter = require("./routes/apiRoutes/artikelApi.routes");
 const tanamanApiRouter = require("./routes/apiRoutes/tanamanApi.routes");
 
 // Template Engine EJS
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // URL Route

@@ -4,8 +4,8 @@
   "description": "Capstone Project",
   "main": "app.js",
   "scripts": {
-    "start": "node app",
-    "start-dev": "nodemon app"
+    "start": "node ./src/app",
+    "start-dev": "nodemon ./src/app"
   },
   "author": "Team CH2-PS485",
   "license": "ISC",
