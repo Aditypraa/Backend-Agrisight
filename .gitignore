@@ -1,2 +1,6 @@
+# File npm
 node_modules/
+package-lock.json
+
+# File Konfigurasi
 .env

@@ -1,9 +1,8 @@
 const path = require("path");
 const express = require("express");
-const dotenv = require("dotenv");
+require("dotenv").config();
 
 // DOTENV
-dotenv.config();
 const PORT = process.env.PORT;
 
 const app = express();
