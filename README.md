@@ -1,15 +1,12 @@
-
 # Cloud Computing - AGRISIGHT
 
 ![Arsitektur](https://github.com/Aditypraa/Agrisight/assets/95411404/fc49d59c-ad6e-4355-bd18-7c0c930656a8)
-
 
 ## Tech Stack
 
 **Framework:** : Express.Js
 
 **Dependencies** : dotenv, ejs, express, firebase, firebase-admin, nodemon
-
 
 ## Run Locally
 
@@ -43,7 +40,6 @@ Start the server
   npm run start / npm run start-dev
 ```
 
-
 ## API Reference
 
 #### Get all Tanaman
@@ -73,7 +69,7 @@ Start the server
   - Status Code: 200 OK
   - Content-Type: application/json
 
-    ``` "success": true,
+    ```"success": true,
     "message": "Tanaman ${id} retrieved successfully",
     "data": {
         "tanaman": {
@@ -95,8 +91,7 @@ Start the server
       ```json
       {
         "success": false,
-        "message": "Tanaman with ID ds not found",
-        
+        "message": "Tanaman with ID ds not found"
       }
       ```
 
@@ -137,7 +132,7 @@ Start the server
   - Status Code: 200 OK
   - Content-Type: application/json
 
-    ``` {
+    ```{
     "success": true,
     "message": "Artikel 2mnscC1liB9Ecv9xqIu8 retrieved successfully",
     "data": {
@@ -150,7 +145,6 @@ Start the server
             "deskripsi": "deskripsi"
         }
     }
-}
     ```
 
 - Error Responses
@@ -162,8 +156,7 @@ Start the server
       ```json
       {
         "success": false,
-        "message": "Artikel with ID ds not found",
-        
+        "message": "Artikel with ID ds not found"
       }
       ```
 
@@ -176,7 +169,6 @@ Start the server
         "message": "Internal Server Error"
       }
       ```
-
 
 ## Authors
 
